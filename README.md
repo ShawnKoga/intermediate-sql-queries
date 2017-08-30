@@ -18,6 +18,19 @@ When creating tables we can specify a column as having a foreign key. The dataty
 * Query the `Movie` table to get your entry.
 
 ### Solution
+CREATE TABLE Movie (
+  ID SERIAL PRIMARY KEY,
+  Title TEXT,
+  MediaTypeID INTEGER REFERENCES MediaType
+);
+
+INSERT INTO Movie
+(Title, MediaTypeID)
+VALUES
+("Happy Cows", 2);
+
+SELECT *
+FROM Movie;
 
 <details>
 
@@ -72,6 +85,11 @@ We can also add a foreign key to an existing table. Let's add one to our `Movie`
 * Query the `Movie` table to see your entry.
 
 ### Solution
+ALTER TABLE Movie
+ADD COLUMN GenreID INTEGER REFERENCES Genre(GenreId);
+
+SELECT *
+FROM Movie;
 
 <details>
 
@@ -111,6 +129,9 @@ We don't want to leave the `GenreId` equal to `null` so let's add a value using 
 * Query the `Movie` table to see your entry.
 
 ### Solution
+UPDATE Movie
+SET GenreID = 22
+WHERE Title = 'Happy Cows';
 
 <details>
 
@@ -149,6 +170,9 @@ Now that we know how to make foreign keys and change data, let's do some practic
 * Join the `Artist` and `Album` tables to list out the Artist name and Album name.
 
 ### Solution
+SELECT Artist.Name, Album.Title
+FROM Artist
+JOIN Album ON Artist.ArtistId = Album.ArtistId;
 
 <details>
 
@@ -173,6 +197,11 @@ The next way to use a primary key is with a nested query/sub-select statement. B
 * Use a sub-select statement to get all tracks from the `Track` table where the `GenreId` is either `Jazz` or `Blues`.
 
 ### Solution
+SELECT *
+FROM Track
+Where GenreId IN (SELECT GenreId
+FROM Genre
+WHERE Name = 'Jazz' OR Name = 'Blues')
 
 <details>
 
@@ -193,6 +222,14 @@ WHERE GenreId IN ( SELECT GenreId FROM Genre WHERE Name = 'Jazz' OR Name = 'Blue
 * Query the `Employee` table to get the employee you just updated.
 
 ### Solution
+UPDATE Employee
+SET Phone = null
+WHERE EmployeeId = 1;
+
+SELECT *
+FROM Employee
+WHERE EmployeeId = 1;
+
 
 <details>
 
@@ -231,6 +268,10 @@ Sometimes you want to know when there is no value. For example, let's use the `C
 * Get all customers from the `Customer` table who do not have a company.
 
 ### Solution
+SELECT *
+FROM Customer
+WHERE Company IS null;
+
 
 <details>
 
@@ -253,6 +294,11 @@ How many albums does each artist have? We could count manually, but no! Group by
 * Select all artist ids, artist names, and count how many albums they have.
 
 ### Solution
+SELECT Artist.artistId, Artist.name, count(*) number_of_albums
+FROM Artist
+JOIN Album ON Artist.ArtistId = Album.ArtistId 
+GROUP BY Artist.artistId;
+
 
 <details>
 
@@ -283,6 +329,8 @@ Distinct is great if you want to get a dataset with no duplicates.
 
 ### Solution
 
+
+
 <details>
 
 <summary> <code> No Duplicate Countries </code> </summary>
@@ -305,6 +353,11 @@ Deleting rows can be dangerous if you are not cautious. Always do a select of wh
 * Delete all records from the `Customer` table where fax is null;
 
 ### Solution
+SELECT *
+FROM Customer
+WHERE Fax IS null;
+
+
 
 <details>
 
